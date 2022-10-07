@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { motion } from "framer-motion";
-
+import { motion, useAnimation, useScroll } from "framer-motion";
 import { Link, useMatch } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-const Nav = styled.nav`
+const Nav = styled(motion.nav)`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -49,7 +49,7 @@ const Item = styled.li`
   }
 `;
 
-const Circle = styled.div`
+const Circle = styled(motion.div)`
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -60,6 +60,30 @@ const Circle = styled.div`
   margin: 10px auto 0 auto;
 `;
 
+const Search = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${(props) => props.theme.white.darker};
+
+  svg {
+    height: 20px;
+  }
+  &:hover {
+    color: ${(props) => props.theme.white.lighter};
+  }
+`;
+
+const Input = styled(motion.input)`
+  transform-origin: right center;
+  padding: 7px 10px 7px 40px;
+  font-size: 16px;
+  outline: none;
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+`;
+
 const logoVariant = {
   initial: { fillOpacity: 1 },
   hover: { fillOpacity: [1, 0, 1], transition: { repeat: Infinity } },
@@ -68,8 +92,42 @@ const logoVariant = {
 function Header() {
   const homeMatch = useMatch("/");
   const tvMatch = useMatch("/tv");
+
+  const inputAnimation = useAnimation();
+  const navAnimation = useAnimation();
+
+  const [searchOpen, setSearchOpen] = useState(false);
+  const { scrollY } = useScroll();
+
+  const searchClick = () => {
+    if (searchOpen) {
+      inputAnimation.start({
+        scaleX: 0,
+      });
+    } else {
+      inputAnimation.start({
+        scaleX: 1,
+      });
+    }
+    setSearchOpen((current) => !current);
+  };
+
+  useEffect(() => {
+    scrollY.onChange(() => {
+      if (scrollY.get() > 80) {
+        navAnimation.start({
+          backgroundColor: "rgba(0,0,0,0)",
+        });
+      } else {
+        navAnimation.start({
+          backgroundColor: "rgba(0,0,0,1)",
+        });
+      }
+    });
+  }, [scrollY]);
+
   return (
-    <Nav>
+    <Nav animate={navAnimation} initial={{ backgroundColor: "rgba(0,0,0,1)" }}>
       <Container>
         <Logo
           whileHover="hover"
@@ -84,19 +142,36 @@ function Header() {
           <Link to="/">
             <Item>
               Home
-              {homeMatch ? <Circle /> : null}
+              {homeMatch ? <Circle layoutId="circle" /> : null}
             </Item>
           </Link>
           <Link to="/tv">
             <Item>
               Tv Show
-              {tvMatch ? <Circle /> : null}
+              {tvMatch ? <Circle layoutId="circle" /> : null}
             </Item>
           </Link>
         </Menu>
       </Container>
       <Container>
-        <button>Search</button>
+        <Search>
+          <Input
+            initial={{ scaleX: 0 }}
+            animate={inputAnimation}
+            transition={{ type: "linear" }}
+            placeholder="제목을 입력해주세요."
+          />
+          <motion.svg
+            onClick={searchClick}
+            animate={{ x: searchOpen ? -237 : 0 }}
+            transition={{ type: "linear" }}
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 512 512"
+          >
+            <path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z" />
+          </motion.svg>
+        </Search>
       </Container>
     </Nav>
   );
