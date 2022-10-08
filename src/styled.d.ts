@@ -1,6 +1,6 @@
 import "styled-components";
 
-declare module "style-components" {
+declare module "styled-components" {
   export interface DefaultTheme {
     red: string;
     black: {
