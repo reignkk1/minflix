@@ -58,6 +58,7 @@ const Slide = styled(motion.div)`
   height: 100%;
   width: 100%;
   position: absolute;
+  padding: 0px 60px;
 `;
 
 const Item = styled(motion.div)<{ bgPoster: string }>`
@@ -67,6 +68,26 @@ const Item = styled(motion.div)<{ bgPoster: string }>`
   background-image: url(${(props) => props.bgPoster});
   background-position: center center;
   background-size: cover;
+
+  &:first-child {
+    transform-origin: left center;
+  }
+  &:last-child {
+    transform-origin: right center;
+  }
+`;
+
+const Info = styled(motion.div)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 70px;
+  background-color: ${(props) => props.theme.black.lighter};
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
 `;
 
 function Home() {
@@ -99,6 +120,24 @@ function Home() {
     exit: { x: -window.outerWidth - 10 },
   };
 
+  const boxVariant = {
+    start: { scale: 1 },
+    hover: {
+      zIndex: 99,
+      scale: 1.2,
+      transition: { delay: 0.5, type: "tween" },
+      y: -40,
+    },
+  };
+
+  const infoVariant = {
+    hover: {
+      opacity: 1,
+      zIndex: 99,
+      transition: { delay: 0.5, type: "tween" },
+    },
+  };
+
   return (
     <Main>
       {isLoading ? (
@@ -107,7 +146,11 @@ function Home() {
         <>
           <Banner
             onClick={indexUp}
-            bgImge={makePath(data?.results[5].backdrop_path || "")}
+            bgImge={makePath(
+              data?.results[5].backdrop_path ||
+                data?.results[5].poster_path ||
+                ""
+            )}
           >
             <Title>{data?.results[5].title}</Title>
             <Overview>{data?.results[5].overview}</Overview>
@@ -120,7 +163,7 @@ function Home() {
                 initial="start"
                 animate="end"
                 exit="exit"
-                transition={{ type: "tween", duration: 1.5 }}
+                transition={{ type: "tween", duration: 2 }}
                 key={index}
               >
                 {data?.results
@@ -128,9 +171,15 @@ function Home() {
                   .slice(offset * index, offset * index + offset)
                   .map((item) => (
                     <Item
+                      variants={boxVariant}
+                      initial="start"
+                      whileHover="hover"
+                      transition={{ type: "tween" }}
                       key={item.id}
                       bgPoster={makePath(item.poster_path, "w400")}
-                    />
+                    >
+                      <Info variants={infoVariant}>{item.title}</Info>
+                    </Item>
                   ))}
               </Slide>
             </AnimatePresence>
