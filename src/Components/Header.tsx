@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { motion, useAnimation, useScroll } from "framer-motion";
-import { Link, useMatch } from "react-router-dom";
+import { Link, useMatch, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 const Nav = styled(motion.nav)`
   display: flex;
@@ -60,7 +61,7 @@ const Circle = styled(motion.div)`
   margin: 10px auto 0 auto;
 `;
 
-const Search = styled.div`
+const Search = styled.form`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -126,6 +127,17 @@ function Header() {
     });
   }, [scrollY]);
 
+  interface IForm {
+    keyword: String;
+  }
+  const { register, handleSubmit } = useForm<IForm>();
+  const navigate = useNavigate();
+
+  const onSubmit = (data: IForm) => {
+    console.log(data);
+    navigate(`/search?keyword=${data.keyword}`);
+  };
+
   return (
     <Nav animate={navAnimation} initial={{ backgroundColor: "rgba(0,0,0,1)" }}>
       <Container>
@@ -154,8 +166,9 @@ function Header() {
         </Menu>
       </Container>
       <Container>
-        <Search>
+        <Search onSubmit={handleSubmit(onSubmit)}>
           <Input
+            {...register("keyword", { required: true, minLength: 2 })}
             initial={{ scaleX: 0 }}
             animate={inputAnimation}
             transition={{ type: "linear" }}

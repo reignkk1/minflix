@@ -6,6 +6,7 @@ import { makePath } from "../imgePath";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 const Main = styled.div`
   height: 100vh;
@@ -137,7 +138,6 @@ function Home() {
     ["movies", "nowPlaying"],
     getMovies
   );
-  console.log(data);
 
   const [index, setIndex] = useState(0);
   const [exiting, setExiting] = useState(false);
@@ -159,7 +159,9 @@ function Home() {
 
   const bigMovieInfo = useMatch("/movie/:id");
 
-  //Click Event
+  const { register, handleSubmit } = useForm();
+
+  //=========================Click Event=====================================
 
   const boxClick = (moveiId: number) => {
     navigate(`/movie/${moveiId}`);
@@ -172,7 +174,6 @@ function Home() {
   const movieClick =
     bigMovieInfo?.params.id &&
     data?.results.find((movie) => movie.id + "" === bigMovieInfo.params.id);
-  console.log(movieClick);
 
   //=======================Variants==========================================
 
