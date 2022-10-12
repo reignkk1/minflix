@@ -18,6 +18,6 @@ export interface IGetMovies {
 
 export function getMovies() {
   return fetch(
-    `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1&region=kr`
+    `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=ko-KR&page=1&region=kr`
   ).then((response) => response.json());
 }

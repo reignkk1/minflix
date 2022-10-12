@@ -6,7 +6,6 @@ import { makePath } from "../imgePath";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
 
 const Main = styled.div`
   height: 100vh;
@@ -20,7 +19,7 @@ const Loder = styled.div`
   height: 10vh;
 `;
 
-//Banner
+//=============================== Banner =========================================
 const Banner = styled.div<{ bgImge: string }>`
   display: flex;
   flex-direction: column;
@@ -47,17 +46,29 @@ const Overview = styled.p`
   width: 50%;
 `;
 
-//Slider
-const SlideBox = styled.div`
-  top: -100px;
+//=============================== Slider ========================================
+const SlideContainer = styled.div`
+  width: 100%;
   height: 100%;
   position: relative;
 `;
 
+const SliderTitle = styled.h1`
+  padding: 0 60px;
+  margin-bottom: 50px;
+  font-size: 34px;
+  font-weight: 600;
+  color: white;
+`;
+
+const SlideBox = styled.div`
+  height: 50%;
+`;
+const SlideBox2 = styled.div``;
+
 const Slide = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  margin-bottom: 10px;
   gap: 10px;
   height: 35%;
   width: 100%;
@@ -87,8 +98,8 @@ const Info = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 70px;
-  background-color: rgba(0, 0, 0, 0.7);
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.8);
   opacity: 0;
   position: absolute;
   width: 100%;
@@ -121,6 +132,7 @@ const MovieBox = styled(motion.div)`
 
 const MovieImg = styled.img`
   width: 100%;
+  height: 50%;
 `;
 
 const MovieTitle = styled.h1`
@@ -158,8 +170,6 @@ function Home() {
   const navigate = useNavigate();
 
   const bigMovieInfo = useMatch("/movie/:id");
-
-  const { register, handleSubmit } = useForm();
 
   //=========================Click Event=====================================
 
@@ -216,37 +226,42 @@ function Home() {
             <Title>{data?.results[5].title}</Title>
             <Overview>{data?.results[5].overview}</Overview>
           </Banner>
-
-          <SlideBox>
-            <AnimatePresence initial={false} onExitComplete={toggleExit}>
-              <Slide
-                variants={slideVariant}
-                initial="start"
-                animate="end"
-                exit="exit"
-                transition={{ type: "tween", duration: 2 }}
-                key={index}
-              >
-                {data?.results
-                  .slice(1)
-                  .slice(offset * index, offset * index + offset)
-                  .map((item) => (
-                    <Item
-                      onClick={() => boxClick(item.id)}
-                      variants={boxVariant}
-                      initial="start"
-                      whileHover="hover"
-                      transition={{ type: "tween" }}
-                      key={item.id}
-                      bgPoster={makePath(item.poster_path, "w300")}
-                      layoutId={item.id + ""}
-                    >
-                      <Info variants={infoVariant}>{item.title}</Info>
-                    </Item>
-                  ))}
-              </Slide>
-            </AnimatePresence>
-          </SlideBox>
+          <SlideContainer>
+            <SlideBox>
+              <SliderTitle>현재 상영중</SliderTitle>
+              <AnimatePresence initial={false} onExitComplete={toggleExit}>
+                <Slide
+                  variants={slideVariant}
+                  initial="start"
+                  animate="end"
+                  exit="exit"
+                  transition={{ type: "tween", duration: 2 }}
+                  key={index}
+                >
+                  {data?.results
+                    .slice(1)
+                    .slice(offset * index, offset * index + offset)
+                    .map((item) => (
+                      <Item
+                        onClick={() => boxClick(item.id)}
+                        variants={boxVariant}
+                        initial="start"
+                        whileHover="hover"
+                        transition={{ type: "tween" }}
+                        key={item.id}
+                        bgPoster={makePath(item.poster_path, "w300")}
+                        layoutId={item.id + ""}
+                      >
+                        <Info variants={infoVariant}>{item.title}</Info>
+                      </Item>
+                    ))}
+                </Slide>
+              </AnimatePresence>
+            </SlideBox>
+            <SlideBox2>
+              <SliderTitle>gd</SliderTitle>
+            </SlideBox2>
+          </SlideContainer>
 
           {bigMovieInfo ? (
             <AnimatePresence>
