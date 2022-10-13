@@ -9,7 +9,7 @@ const Nav = styled(motion.nav)`
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  background-color: ${(props) => props.theme.black.darker};
+
   width: 100%;
   height: 100px;
   top: 0;
