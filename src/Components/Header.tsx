@@ -4,25 +4,26 @@ import { Link, useMatch, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
+// ======================================================================================================
+
+// Style
+
 const Nav = styled(motion.nav)`
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: fixed;
-
   width: 100%;
   height: 100px;
   top: 0;
   padding: 0 80px;
   z-index: 1;
 `;
-
 const Container = styled.div`
   display: flex;
   align-items: center;
   height: 100%;
 `;
-
 const Logo = styled(motion.svg)`
   margin-right: 50px;
   width: 150px;
@@ -33,12 +34,10 @@ const Logo = styled(motion.svg)`
     stroke: white;
   }
 `;
-
 const Menu = styled.ul`
   display: flex;
   align-items: center;
 `;
-
 const Item = styled.li`
   position: relative;
   text-align: center;
@@ -50,7 +49,6 @@ const Item = styled.li`
     cursor: pointer;
   }
 `;
-
 const Circle = styled(motion.div)`
   width: 6px;
   height: 6px;
@@ -61,13 +59,11 @@ const Circle = styled(motion.div)`
   right: 0;
   margin: 10px auto 0 auto;
 `;
-
 const Search = styled.form`
   display: flex;
   justify-content: center;
   align-items: center;
   color: ${(props) => props.theme.white.darker};
-
   svg {
     height: 20px;
   }
@@ -75,7 +71,6 @@ const Search = styled.form`
     color: ${(props) => props.theme.white.lighter};
   }
 `;
-
 const Input = styled(motion.input)`
   transform-origin: right center;
   padding: 7px 10px 7px 40px;
@@ -86,10 +81,13 @@ const Input = styled(motion.input)`
   border: 1px solid rgba(255, 255, 255, 0.5);
 `;
 
+// 로고 Variant
 const logoVariant = {
   initial: { fillOpacity: 1 },
   hover: { fillOpacity: [1, 0, 1], transition: { repeat: Infinity } },
 };
+
+// ======================================================================================================
 
 function Header() {
   const homeMatch = useMatch("/");
