@@ -4,7 +4,7 @@ import { useMatch, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 // File
-import { getPlaying, IGetMovies } from "../api";
+import { getMovie, IGetMovies } from "../api";
 import { makePath } from "../imgePath";
 
 // ======================================================================================================
@@ -46,24 +46,24 @@ const MovieOverview = styled.div`
   padding: 0px 16px;
 `;
 
+interface ICategory {
+  category: string;
+}
 // ======================================================================================================
 
-export function Overlay() {
-  const { data: nowPlaying } = useQuery<IGetMovies>(
-    ["movies", "nowPlaying"],
-    getPlaying
+export function Overlay({ category }: ICategory) {
+  const { data } = useQuery<IGetMovies>(["movies", category], () =>
+    getMovie(category)
   );
   const navigate = useNavigate();
-  const bigMovieInfo = useMatch("/movie/:id");
+  const bigMovieInfo = useMatch("/movie/:category/:id");
 
   const overlayClick = () => {
     navigate("/");
   };
   const movieClick =
     bigMovieInfo?.params.id &&
-    nowPlaying?.results.find(
-      (movie) => movie.id + "" === bigMovieInfo.params.id
-    );
+    data?.results.find((movie) => movie.id + "" === bigMovieInfo.params.id);
 
   return bigMovieInfo ? (
     <AnimatePresence>

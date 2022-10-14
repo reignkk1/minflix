@@ -5,12 +5,19 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 // File
-import { getPlaying, IGetMovies } from "../api";
+import { getMovie, IGetMovies } from "../api";
 import { makePath } from "../imgePath";
 
 // ======================================================================================================
 
 //Style
+
+const Loder = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh;
+`;
 
 const SliderTitle = styled.h1`
   padding: 0 60px;
@@ -81,12 +88,14 @@ const Btn = styled.button`
   border: none;
 `;
 
+interface ICategory {
+  category: string;
+}
 // ======================================================================================================
 
-export function Slider() {
-  const { data: nowPlaying } = useQuery<IGetMovies>(
-    ["movies", "nowPlaying"],
-    getPlaying
+export function Slider({ category }: ICategory) {
+  const { isLoading, data } = useQuery<IGetMovies>(["movies", category], () =>
+    getMovie(category)
   );
   const [index, setIndex] = useState(0);
 
@@ -105,11 +114,11 @@ export function Slider() {
   // 인덱스 증가 / 감소
 
   const indexUp = () => {
-    if (nowPlaying) {
+    if (data) {
       if (exiting) {
         return;
       }
-      const totalMovie = nowPlaying.results.length;
+      const totalMovie = data?.results.length;
       const maxIndex = Math.floor(totalMovie / offset);
       setIndexIncrease(true);
       toggleExit();
@@ -117,11 +126,11 @@ export function Slider() {
     }
   };
   const indexDown = () => {
-    if (nowPlaying) {
+    if (data) {
       if (exiting) {
         return;
       }
-      const totalMovie = nowPlaying?.results.length;
+      const totalMovie = data?.results.length;
       const maxIndex = Math.floor(totalMovie / offset);
       setIndexIncrease(false);
       toggleExit();
@@ -133,8 +142,8 @@ export function Slider() {
 
   // Click 이벤트
 
-  const boxClick = (moveiId: number) => {
-    navigate(`/movie/${moveiId}`);
+  const boxClick = (moveiId: number, category: string) => {
+    navigate(`/movie/${category}/${moveiId}`);
   };
 
   // 애니메이션 Variants
@@ -168,7 +177,9 @@ export function Slider() {
     },
   };
 
-  return (
+  return isLoading ? (
+    <Loder>로딩 중...</Loder>
+  ) : (
     <SlideBox>
       <SliderTitle>현재 상영중</SliderTitle>
       <AnimatePresence
@@ -185,12 +196,12 @@ export function Slider() {
           transition={{ type: "tween", duration: 2 }}
           key={index}
         >
-          {nowPlaying?.results
+          {data?.results
             .slice(1)
             .slice(offset * index, offset * index + offset)
             .map((item) => (
               <Item
-                onClick={() => boxClick(item.id)}
+                onClick={() => boxClick(item.id, category)}
                 variants={boxVariant}
                 initial="start"
                 whileHover="hover"

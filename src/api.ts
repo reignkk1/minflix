@@ -16,13 +16,14 @@ export interface IGetMovies {
   total_results: number;
 }
 
-export function getPlaying() {
+export function getBanner() {
   return fetch(
     `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=ko-KR&page=1&region=kr`
   ).then((response) => response.json());
 }
 
-export function getPopular() {
-  return fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ko-KR&page=1
-  `).then((response) => response.json());
+export function getMovie(category: String) {
+  return fetch(
+    `https://api.themoviedb.org/3/movie/${category}?api_key=${API_KEY}&language=ko-KR&page=1&region=kr`
+  ).then((response) => response.json());
 }

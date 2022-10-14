@@ -1,7 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
-import { getPlaying, IGetMovies } from "../api";
+
+// File
+import { getBanner, IGetMovies } from "../api";
 import { makePath } from "../imgePath";
+
+// ======================================================================================================
 
 const BannerContainer = styled.div<{ bgImge: string }>`
   display: flex;
@@ -29,21 +33,18 @@ const Overview = styled.p`
   width: 50%;
 `;
 
+// ======================================================================================================
+
 export function Banner() {
-  const { data: nowPlaying } = useQuery<IGetMovies>(
-    ["movies", "nowPlaying"],
-    getPlaying
-  );
+  const { data } = useQuery<IGetMovies>(["movies", "nowBanner"], getBanner);
   return (
     <BannerContainer
       bgImge={makePath(
-        nowPlaying?.results[5].backdrop_path ||
-          nowPlaying?.results[5].poster_path ||
-          ""
+        data?.results[5].backdrop_path || data?.results[5].poster_path || ""
       )}
     >
-      <Title>{nowPlaying?.results[5].title}</Title>
-      <Overview>{nowPlaying?.results[5].overview}</Overview>
+      <Title>{data?.results[5].title}</Title>
+      <Overview>{data?.results[5].overview}</Overview>
     </BannerContainer>
   );
 }
