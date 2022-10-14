@@ -170,14 +170,6 @@ function Home() {
   );
   const [index, setIndex] = useState(0);
 
-  // 두번째 슬라이더
-
-  const { isLoading: popularLoding, data: nowPopular } = useQuery<IGetMovies>(
-    ["movies", "nowPopular"],
-    getPopular
-  );
-  const [index2, setIndex2] = useState(0);
-
   // 인덱스 증가 여부
   const [indexIncrease, setIndexIncrease] = useState(false);
 
@@ -217,34 +209,6 @@ function Home() {
       setIndexIncrease(false);
       toggleExit();
       setIndex((current) =>
-        current === 0 ? (current = maxIndex - 1) : current - 1
-      );
-    }
-  };
-
-  // 두번째 슬라이더
-  const indexUp2 = () => {
-    if (nowPopular) {
-      if (exiting) {
-        return;
-      }
-      const totalMovie = nowPopular.results.length;
-      const maxIndex = Math.floor(totalMovie / offset);
-      setIndexIncrease(true);
-      toggleExit();
-      setIndex2((current) => (current === maxIndex - 1 ? 0 : current + 1));
-    }
-  };
-  const indexDown2 = () => {
-    if (nowPopular) {
-      if (exiting) {
-        return;
-      }
-      const totalMovie = nowPopular.results.length;
-      const maxIndex = Math.floor(totalMovie / offset);
-      setIndexIncrease(false);
-      toggleExit();
-      setIndex2((current) =>
         current === 0 ? (current = maxIndex - 1) : current - 1
       );
     }
@@ -355,42 +319,6 @@ function Home() {
                 <ButtonBox>
                   <Btn onClick={indexUp}>◀</Btn>
                   <Btn onClick={indexDown}>▶</Btn>
-                </ButtonBox>
-              </SlideBox>
-            }
-
-            {
-              /* 두번째 슬라이드 박스 */
-
-              <SlideBox>
-                <SliderTitle>가장 인기있는</SliderTitle>
-                <AnimatePresence
-                  custom={indexIncrease}
-                  initial={false}
-                  onExitComplete={toggleExit}
-                >
-                  <Slide
-                    custom={indexIncrease}
-                    key={index2}
-                    variants={slideVariant}
-                    initial="start"
-                    animate="end"
-                    exit="exit"
-                    transition={{ duration: 2 }}
-                  >
-                    {nowPopular?.results
-                      .slice(offset * index2, offset * index2 + offset)
-                      .map((movie) => (
-                        <Item
-                          key={movie.id}
-                          bgPoster={makePath(movie.poster_path)}
-                        ></Item>
-                      ))}
-                  </Slide>
-                </AnimatePresence>
-                <ButtonBox>
-                  <Btn onClick={indexUp2}>◀</Btn>
-                  <Btn onClick={indexDown2}>▶</Btn>
                 </ButtonBox>
               </SlideBox>
             }
