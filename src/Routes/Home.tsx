@@ -12,13 +12,10 @@ import { category } from "../category";
 
 const Main = styled.div`
   height: 100vh;
-  overflow-x: hidden;
 `;
 
 const SlideContainer = styled.div`
-  width: 100%;
   height: 100%;
-  position: relative;
 `;
 
 // ======================================================================================================

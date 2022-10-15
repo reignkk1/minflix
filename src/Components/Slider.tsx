@@ -19,6 +19,12 @@ const Loder = styled.div`
   height: 10vh;
 `;
 
+const SlideBox = styled.div`
+  height: 500px;
+  position: relative;
+  top: -200px;
+`;
+
 const SliderTitle = styled.h1`
   padding: 0 60px;
   margin-bottom: 50px;
@@ -27,24 +33,17 @@ const SliderTitle = styled.h1`
   color: white;
 `;
 
-const SlideBox = styled.div`
-  height: 50%;
-`;
-
 const Slide = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px;
-  height: 35%;
   width: 100%;
   position: absolute;
   padding: 0px 60px;
 `;
 
 const Item = styled(motion.div)<{ bgPoster: string }>`
-  width: 100%;
-  height: 100%;
-  background-color: white;
+  height: 360px;
   background-image: url(${(props) => props.bgPoster});
   background-position: center center;
   background-size: cover;
@@ -172,7 +171,6 @@ export function Slider({ category }: ICategory) {
   const infoVariant = {
     hover: {
       opacity: 1,
-      zIndex: 99,
       transition: { delay: 0.5, type: "tween" },
     },
   };
@@ -206,9 +204,9 @@ export function Slider({ category }: ICategory) {
                 initial="start"
                 whileHover="hover"
                 transition={{ type: "tween" }}
-                key={item.id}
+                key={item.id + category}
                 bgPoster={makePath(item.poster_path, "w300")}
-                layoutId={item.id + ""}
+                layoutId={item.id + category}
               >
                 <Info variants={infoVariant}>{item.title}</Info>
               </Item>

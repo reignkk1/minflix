@@ -120,7 +120,7 @@ function Header() {
         });
       } else {
         navAnimation.start({
-          backgroundColor: "rgba(0,0,0,1)",
+          backgroundColor: "rgba(0,0,0,0.5)",
         });
       }
     });

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { useMatch, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
@@ -18,24 +18,27 @@ const OverlayContainer = styled(motion.div)`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
+  z-index: 1;
 `;
-const MovieBox = styled(motion.div)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: fixed;
+const MovieBox = styled(motion.div)<{ scrollY: number }>`
+  position: absolute;
   width: 40vw;
   height: 80vh;
   background-color: rgba(0, 0, 0, 0.7);
   border-radius: 25px;
   overflow: hidden;
+  top: ${(props) => props.scrollY + 50}px;
   left: 0;
   right: 0;
   margin: 0 auto;
+  z-index: 2;
 `;
-const MovieImg = styled.img`
+const MovieImg = styled.div<{ movieImg: string }>`
   width: 100%;
   height: 50%;
+  background-image: url(${(props) => props.movieImg});
+  background-position: center center;
+  background-size: cover;
 `;
 const MovieTitle = styled.h1`
   font-size: 34px;
@@ -56,7 +59,7 @@ export function Overlay({ category }: ICategory) {
     getMovie(category)
   );
   const navigate = useNavigate();
-  const bigMovieInfo = useMatch("/movie/:category/:id");
+  const bigMovieInfo = useMatch(`/movie/${category}/:id`);
 
   const overlayClick = () => {
     navigate("/");
@@ -65,6 +68,8 @@ export function Overlay({ category }: ICategory) {
     bigMovieInfo?.params.id &&
     data?.results.find((movie) => movie.id + "" === bigMovieInfo.params.id);
 
+  const { scrollY } = useScroll();
+
   return bigMovieInfo ? (
     <AnimatePresence>
       <OverlayContainer
@@ -72,10 +77,13 @@ export function Overlay({ category }: ICategory) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       />
-      <MovieBox style={{ top: 110 }} layoutId={bigMovieInfo?.params.id}>
+      <MovieBox
+        scrollY={scrollY.get()}
+        layoutId={bigMovieInfo?.params.id + category}
+      >
         {movieClick && (
           <>
-            <MovieImg src={makePath(movieClick.backdrop_path, "w500")} />
+            <MovieImg movieImg={makePath(movieClick.backdrop_path, "w500")} />
             <MovieTitle>{movieClick.title}</MovieTitle>
             <MovieOverview>{movieClick.overview}</MovieOverview>
           </>
