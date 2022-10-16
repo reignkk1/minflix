@@ -28,6 +28,14 @@ export interface IGetDetail {
   tagline: string;
 }
 
+interface IKey {
+  key: string;
+}
+
+export interface IGetVideo {
+  results: IKey[];
+}
+
 export function getMovie(category: String) {
   return fetch(
     `https://api.themoviedb.org/3/movie/${category}?api_key=${API_KEY}&language=ko-KR&page=1&region=kr`
@@ -37,5 +45,11 @@ export function getMovie(category: String) {
 export function getMovieDetail(movieId: string | undefined) {
   return fetch(
     `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=ko-KR`
+  ).then((response) => response.json());
+}
+
+export function getMovieVideo(movieId: string | undefined) {
+  return fetch(
+    `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}&language=ko-KR`
   ).then((response) => response.json());
 }

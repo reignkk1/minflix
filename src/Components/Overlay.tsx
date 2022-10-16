@@ -4,7 +4,14 @@ import { useMatch, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 // File
-import { getMovie, getMovieDetail, IGetDetail, IGetMovies } from "../api";
+import {
+  getMovie,
+  getMovieDetail,
+  getMovieVideo,
+  IGetDetail,
+  IGetMovies,
+  IGetVideo,
+} from "../api";
 import { makePath } from "../imgePath";
 
 // ======================================================================================================
@@ -76,6 +83,10 @@ export function Overlay({ category }: ICategory) {
     ["movieDetail", bigMovieInfo?.params.id],
     () => getMovieDetail(bigMovieInfo?.params.id)
   );
+  const { data: video } = useQuery<IGetVideo>(
+    ["movieVideo", bigMovieInfo?.params.id],
+    () => getMovieVideo(bigMovieInfo?.params.id)
+  );
 
   const navigate = useNavigate();
 
@@ -101,7 +112,17 @@ export function Overlay({ category }: ICategory) {
       >
         {movieClick && (
           <>
-            <MovieImg movieImg={makePath(movieClick.backdrop_path, "w500")} />
+            {video ? (
+              <iframe
+                width="560"
+                height="315"
+                src={`https://www.youtube-nocookie.com/embed/${video?.results[0].key}?controls=1`}
+                title="YouTube video player"
+              ></iframe>
+            ) : (
+              <MovieImg movieImg={makePath(movieClick.backdrop_path, "w500")} />
+            )}
+
             <MovieInfo>
               <MovieTitle>{movieClick.title}</MovieTitle>
               <MovieGenres>
