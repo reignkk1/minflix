@@ -1,15 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
-
-// File
-import { getBanner, IGetMovies } from "../api";
-import { makePath } from "../imgePath";
+import { motion } from "framer-motion";
 
 // ======================================================================================================
 
 const BannerContainer = styled.div<{ bgImge: string }>`
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
   padding: 60px;
   height: 100vh;
@@ -17,34 +13,27 @@ const BannerContainer = styled.div<{ bgImge: string }>`
   img {
     width: 100%;
   }
-  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)),
+  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9)),
     url(${(props) => props.bgImge});
   background-size: cover;
   background-position: center center;
 `;
 
-const Title = styled.h1`
+const Title = styled(motion.h1)`
   font-size: 50px;
-  margin-bottom: 20px;
-`;
-
-const Overview = styled.p`
-  font-size: 20px;
-  width: 50%;
+  font-weight: 600;
 `;
 
 // ======================================================================================================
 
 export function Banner() {
-  const { data } = useQuery<IGetMovies>(["movies", "nowBanner"], getBanner);
   return (
     <BannerContainer
-      bgImge={makePath(
-        data?.results[5].backdrop_path || data?.results[5].poster_path || ""
-      )}
+      bgImge={
+        "https://assets.nflxext.com/ffe/siteui/vlv3/28b69a57-cadf-43d9-8a95-e5f2e11199de/4490a703-c009-4266-8f15-938d80811812/KR-ko-20221010-popsignuptwoweeks-perspective_alpha_website_large.jpg"
+      }
     >
-      <Title>{data?.results[5].title}</Title>
-      <Overview>{data?.results[5].overview}</Overview>
+      <Title>다양한 영화들을 만나보세요.</Title>
     </BannerContainer>
   );
 }

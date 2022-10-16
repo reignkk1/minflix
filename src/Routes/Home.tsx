@@ -28,9 +28,11 @@ function Home() {
         <SlideContainer>
           <Slider category={category.nowPlaying} />
           <Slider category={category.nowPopular} />
+          <Slider category={category.topRate} />
         </SlideContainer>
         <Overlay category={category.nowPlaying} />
         <Overlay category={category.nowPopular} />
+        <Overlay category={category.topRate} />
       </>
     </Main>
   );

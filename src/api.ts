@@ -6,6 +6,7 @@ interface IMovie {
   poster_path: string;
   title: string;
   overview: string;
+  release_date: string;
 }
 
 export interface IGetMovies {
@@ -16,14 +17,25 @@ export interface IGetMovies {
   total_results: number;
 }
 
-export function getBanner() {
-  return fetch(
-    `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=ko-KR&page=1&region=kr`
-  ).then((response) => response.json());
+interface IGenres {
+  id: number;
+  name: string;
+}
+
+export interface IGetDetail {
+  genres: IGenres[];
+  runtime: number;
+  tagline: string;
 }
 
 export function getMovie(category: String) {
   return fetch(
     `https://api.themoviedb.org/3/movie/${category}?api_key=${API_KEY}&language=ko-KR&page=1&region=kr`
+  ).then((response) => response.json());
+}
+
+export function getMovieDetail(movieId: string | undefined) {
+  return fetch(
+    `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=ko-KR`
   ).then((response) => response.json());
 }

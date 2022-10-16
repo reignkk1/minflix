@@ -22,7 +22,9 @@ const Loder = styled.div`
 const SlideBox = styled.div`
   height: 500px;
   position: relative;
-  top: -200px;
+  top: -20px;
+  border-top: 5px solid #292929;
+  padding: 20px 0px;
 `;
 
 const SliderTitle = styled.h1`
@@ -179,7 +181,15 @@ export function Slider({ category }: ICategory) {
     <Loder>로딩 중...</Loder>
   ) : (
     <SlideBox>
-      <SliderTitle>현재 상영중</SliderTitle>
+      <SliderTitle>
+        {category === "now_playing"
+          ? "현재 상영중"
+          : category === "popular"
+          ? "인기 있는"
+          : category === "top_rated"
+          ? "평점 높은"
+          : null}
+      </SliderTitle>
       <AnimatePresence
         custom={indexIncrease}
         initial={false}
@@ -195,7 +205,6 @@ export function Slider({ category }: ICategory) {
           key={index}
         >
           {data?.results
-            .slice(1)
             .slice(offset * index, offset * index + offset)
             .map((item) => (
               <Item

@@ -4,7 +4,7 @@ import { useMatch, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 // File
-import { getMovie, IGetMovies } from "../api";
+import { getMovie, getMovieDetail, IGetDetail, IGetMovies } from "../api";
 import { makePath } from "../imgePath";
 
 // ======================================================================================================
@@ -40,13 +40,25 @@ const MovieImg = styled.div<{ movieImg: string }>`
   background-position: center center;
   background-size: cover;
 `;
+
+const MovieInfo = styled.div`
+  padding: 24px;
+`;
 const MovieTitle = styled.h1`
   font-size: 34px;
   padding: 12px 0px 24px 0px;
-  text-align: center;
 `;
-const MovieOverview = styled.div`
-  padding: 0px 16px;
+const MovieGenres = styled.div`
+  margin-bottom: 5px;
+`;
+const MovieDate = styled.div`
+  margin-bottom: 5px;
+`;
+const MovieTimeLine = styled.div`
+  margin-bottom: 5px;
+`;
+const MovieTagLine = styled.div`
+  margin-bottom: 5px;
 `;
 
 interface ICategory {
@@ -55,11 +67,17 @@ interface ICategory {
 // ======================================================================================================
 
 export function Overlay({ category }: ICategory) {
+  const bigMovieInfo = useMatch(`/movie/${category}/:id`);
+
   const { data } = useQuery<IGetMovies>(["movies", category], () =>
     getMovie(category)
   );
+  const { data: detail } = useQuery<IGetDetail>(
+    ["movieDetail", bigMovieInfo?.params.id],
+    () => getMovieDetail(bigMovieInfo?.params.id)
+  );
+
   const navigate = useNavigate();
-  const bigMovieInfo = useMatch(`/movie/${category}/:id`);
 
   const overlayClick = () => {
     navigate("/");
@@ -84,8 +102,18 @@ export function Overlay({ category }: ICategory) {
         {movieClick && (
           <>
             <MovieImg movieImg={makePath(movieClick.backdrop_path, "w500")} />
-            <MovieTitle>{movieClick.title}</MovieTitle>
-            <MovieOverview>{movieClick.overview}</MovieOverview>
+            <MovieInfo>
+              <MovieTitle>{movieClick.title}</MovieTitle>
+              <MovieGenres>
+                장르 :{" "}
+                {detail?.genres.map((gen) => (
+                  <span>{gen.name + " "}</span>
+                ))}
+              </MovieGenres>
+              <MovieDate>개봉일 : {movieClick.release_date}</MovieDate>
+              <MovieTimeLine>{detail?.runtime} 분</MovieTimeLine>
+              <MovieTagLine>{detail?.tagline}</MovieTagLine>
+            </MovieInfo>
           </>
         )}
       </MovieBox>
