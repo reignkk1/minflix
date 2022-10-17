@@ -8,6 +8,9 @@ import {
   getMovie,
   getMovieDetail,
   getMovieVideo,
+  getTv,
+  getTvDetail,
+  getTvVideo,
   IGetDetail,
   IGetMovies,
   IGetVideo,
@@ -68,30 +71,38 @@ const MovieTagLine = styled.div`
   margin-bottom: 5px;
 `;
 
-interface ICategory {
+interface IOverlay {
   category: string;
+  type: string;
 }
 // ======================================================================================================
 
-export function Overlay({ category }: ICategory) {
-  const bigMovieInfo = useMatch(`/movie/${category}/:id`);
+export function Overlay({ category, type }: IOverlay) {
+  const bigMovieInfo = useMatch(`/${type}/${category}/:id`);
 
-  const { data } = useQuery<IGetMovies>(["movies", category], () =>
-    getMovie(category)
+  const { data } = useQuery<IGetMovies>(
+    [type, category],
+    type === "movie" ? () => getMovie(category) : () => getTv(category)
   );
+
   const { data: detail } = useQuery<IGetDetail>(
-    ["movieDetail", bigMovieInfo?.params.id],
-    () => getMovieDetail(bigMovieInfo?.params.id)
+    [`${type}Detail`, bigMovieInfo?.params.id],
+    type === "movie"
+      ? () => getMovieDetail(bigMovieInfo?.params.id)
+      : () => getTvDetail(bigMovieInfo?.params.id)
   );
+
   const { data: video } = useQuery<IGetVideo>(
-    ["movieVideo", bigMovieInfo?.params.id],
-    () => getMovieVideo(bigMovieInfo?.params.id)
+    [`${type}Video`, bigMovieInfo?.params.id],
+    type === "movie"
+      ? () => getMovieVideo(bigMovieInfo?.params.id)
+      : () => getTvVideo(bigMovieInfo?.params.id)
   );
 
   const navigate = useNavigate();
 
   const overlayClick = () => {
-    navigate("/");
+    type === "movie" ? navigate("/") : navigate("/tv");
   };
   const movieClick =
     bigMovieInfo?.params.id &&
@@ -112,10 +123,10 @@ export function Overlay({ category }: ICategory) {
       >
         {movieClick && (
           <>
-            {video ? (
+            {video?.results[0] ? (
               <iframe
-                width="560"
-                height="315"
+                width="100%"
+                height="400px"
                 src={`https://www.youtube-nocookie.com/embed/${video?.results[0].key}?controls=1`}
                 title="YouTube video player"
               ></iframe>
@@ -124,16 +135,27 @@ export function Overlay({ category }: ICategory) {
             )}
 
             <MovieInfo>
-              <MovieTitle>{movieClick.title}</MovieTitle>
+              <MovieTitle>
+                {type === "movie" ? movieClick.title : movieClick.name}
+              </MovieTitle>
               <MovieGenres>
                 장르 :{" "}
                 {detail?.genres.map((gen) => (
                   <span>{gen.name + " "}</span>
                 ))}
               </MovieGenres>
-              <MovieDate>개봉일 : {movieClick.release_date}</MovieDate>
-              <MovieTimeLine>{detail?.runtime} 분</MovieTimeLine>
-              <MovieTagLine>{detail?.tagline}</MovieTagLine>
+              <MovieDate>
+                개봉일 :{" "}
+                {type === "movie"
+                  ? movieClick.release_date
+                  : movieClick.first_air_date}
+              </MovieDate>
+              <MovieTimeLine>
+                {type === "movie" ? `${detail?.runtime} 분` : null}
+              </MovieTimeLine>
+              <MovieTagLine>
+                {type === "movie" ? detail?.tagline : detail?.overview}
+              </MovieTagLine>
             </MovieInfo>
           </>
         )}

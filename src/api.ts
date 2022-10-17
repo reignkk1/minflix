@@ -7,6 +7,8 @@ interface IMovie {
   title: string;
   overview: string;
   release_date: string;
+  name: string;
+  first_air_date: string;
 }
 
 export interface IGetMovies {
@@ -26,6 +28,7 @@ export interface IGetDetail {
   genres: IGenres[];
   runtime: number;
   tagline: string;
+  overview: string;
 }
 
 interface IKey {
@@ -36,20 +39,44 @@ export interface IGetVideo {
   results: IKey[];
 }
 
-export function getMovie(category: String) {
-  return fetch(
+export async function getMovie(category: String) {
+  return await fetch(
     `https://api.themoviedb.org/3/movie/${category}?api_key=${API_KEY}&language=ko-KR&page=1&region=kr`
   ).then((response) => response.json());
 }
 
-export function getMovieDetail(movieId: string | undefined) {
-  return fetch(
+export async function getMovieDetail(movieId: string | undefined) {
+  return await fetch(
     `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=ko-KR`
   ).then((response) => response.json());
 }
 
-export function getMovieVideo(movieId: string | undefined) {
-  return fetch(
+export async function getMovieVideo(movieId: string | undefined) {
+  return await fetch(
     `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}&language=ko-KR`
+  ).then((response) => response.json());
+}
+
+export interface IGetTv {
+  results: IMovie[];
+  total_pages: number;
+  total_results: number;
+}
+
+export async function getTv(category: String) {
+  return await fetch(
+    `https://api.themoviedb.org/3/tv/${category}?api_key=${API_KEY}&language=ko-KR&page=1`
+  ).then((response) => response.json());
+}
+
+export async function getTvDetail(movieId: string | undefined) {
+  return await fetch(
+    `https://api.themoviedb.org/3/tv/${movieId}?api_key=${API_KEY}&language=ko-KR`
+  ).then((response) => response.json());
+}
+
+export async function getTvVideo(movieId: string | undefined) {
+  return await fetch(
+    `https://api.themoviedb.org/3/tv/${movieId}/videos?api_key=${API_KEY}&language=ko-KR`
   ).then((response) => response.json());
 }

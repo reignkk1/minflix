@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 // File
-import { getMovie, IGetMovies } from "../api";
+import { getMovie, getTv, IGetMovies } from "../api";
 import { makePath } from "../imgePath";
 
 // ======================================================================================================
@@ -44,11 +44,12 @@ const Slide = styled(motion.div)`
   padding: 0px 60px;
 `;
 
-const Item = styled(motion.div)<{ bgPoster: string }>`
+const Item = styled(motion.div)`
   height: 360px;
-  background-image: url(${(props) => props.bgPoster});
-  background-position: center center;
-  background-size: cover;
+  img {
+    width: 100%;
+    height: 100%;
+  }
   cursor: pointer;
 
   &:first-child {
@@ -89,14 +90,16 @@ const Btn = styled.button`
   border: none;
 `;
 
-interface ICategory {
+interface ISlider {
   category: string;
+  type: string;
 }
 // ======================================================================================================
 
-export function Slider({ category }: ICategory) {
-  const { isLoading, data } = useQuery<IGetMovies>(["movies", category], () =>
-    getMovie(category)
+export function Slider({ category, type }: ISlider) {
+  const { isLoading, data } = useQuery<IGetMovies>(
+    ["movies", category],
+    type === "movie" ? () => getMovie(category) : () => getTv(category)
   );
   const [index, setIndex] = useState(0);
 
@@ -144,7 +147,7 @@ export function Slider({ category }: ICategory) {
   // Click 이벤트
 
   const boxClick = (moveiId: number, category: string) => {
-    navigate(`/movie/${category}/${moveiId}`);
+    navigate(`/${type}/${category}/${moveiId}`);
   };
 
   // 애니메이션 Variants
@@ -214,10 +217,12 @@ export function Slider({ category }: ICategory) {
                 whileHover="hover"
                 transition={{ type: "tween" }}
                 key={item.id + category}
-                bgPoster={makePath(item.poster_path, "w300")}
                 layoutId={item.id + category}
               >
-                <Info variants={infoVariant}>{item.title}</Info>
+                <img src={makePath(item.poster_path, "w300")}></img>
+                <Info variants={infoVariant}>
+                  {type === "movie" ? item.title : item.name}
+                </Info>
               </Item>
             ))}
         </Slide>

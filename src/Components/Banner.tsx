@@ -30,18 +30,20 @@ const Title = styled(motion.div)`
   }
 `;
 
+interface IBanner {
+  bgImge: string;
+  firstTitle: string;
+  secondTitle: string;
+}
+
 // ======================================================================================================
 
-export function Banner() {
+export function Banner({ bgImge, firstTitle, secondTitle }: IBanner) {
   return (
-    <BannerContainer
-      bgImge={
-        "https://assets.nflxext.com/ffe/siteui/vlv3/28b69a57-cadf-43d9-8a95-e5f2e11199de/4490a703-c009-4266-8f15-938d80811812/KR-ko-20221010-popsignuptwoweeks-perspective_alpha_website_large.jpg"
-      }
-    >
+    <BannerContainer bgImge={bgImge}>
       <Title>
-        <h1>다양한 영화들이 당신을 기다립니다.</h1>
-        <h1>영화 그 이상의 감동</h1>
+        <h1>{firstTitle}</h1>
+        <h1>{secondTitle}</h1>
       </Title>
     </BannerContainer>
   );
