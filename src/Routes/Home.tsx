@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Slider } from "../Components/Slider";
 import { Banner } from "../Components/Banner";
 import { Overlay } from "../Components/Overlay";
-import { category } from "../category";
+import { category, type } from "../category";
 
 // ======================================================================================================
 
@@ -31,13 +31,13 @@ function Home() {
         secondTitle={"영화 그 이상의 감동"}
       />
       <SlideContainer>
-        <Slider category={category.nowPlaying} type={"movie"} />
-        <Slider category={category.nowPopular} type={"movie"} />
-        <Slider category={category.topRate} type={"movie"} />
+        <Slider category={category.nowPlaying} type={type.movie} />
+        <Slider category={category.nowPopular} type={type.movie} />
+        <Slider category={category.topRate} type={type.movie} />
       </SlideContainer>
-      <Overlay category={category.nowPlaying} type={"movie"} />
-      <Overlay category={category.nowPopular} type={"movie"} />
-      <Overlay category={category.topRate} type={"movie"} />
+      <Overlay category={category.nowPlaying} type={type.movie} />
+      <Overlay category={category.nowPopular} type={type.movie} />
+      <Overlay category={category.topRate} type={type.movie} />
     </Main>
   );
 }

@@ -80,3 +80,13 @@ export async function getTvVideo(movieId: string | undefined) {
     `https://api.themoviedb.org/3/tv/${movieId}/videos?api_key=${API_KEY}&language=ko-KR`
   ).then((response) => response.json());
 }
+
+export interface ISearch {
+  keyword?: string;
+}
+
+export async function getSearchMovie(keyword: string | null) {
+  return await fetch(
+    `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=ko-KR&query=${keyword}&page=1&include_adult=false`
+  ).then((response) => response.json());
+}

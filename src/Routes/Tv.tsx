@@ -24,7 +24,7 @@ function Tv() {
     <Main>
       <Banner
         bgImge={
-          isLoading ? "로딩 중.." : makePath(data!.results[1].backdrop_path)
+          isLoading ? "로딩 중.." : makePath(data!.results[2].backdrop_path)
         }
         firstTitle={"세상의 모든 즐거움, TV 안에 있습니다."}
         secondTitle={"TV 프로그램, 드라마 그리고 수많은 콘텐츠"}

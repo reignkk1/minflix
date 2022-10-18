@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 // File
-import { getMovie, getTv, IGetMovies } from "../api";
+import { getMovie, getSearchMovie, getTv, IGetMovies } from "../api";
 import { makePath } from "../imgePath";
 
 // ======================================================================================================
@@ -93,14 +93,20 @@ const Btn = styled.button`
 interface ISlider {
   category: string;
   type: string;
+  keyword?: any;
 }
 // ======================================================================================================
 
-export function Slider({ category, type }: ISlider) {
+export function Slider({ category, type, keyword }: ISlider) {
   const { isLoading, data } = useQuery<IGetMovies>(
     ["movies", category],
-    type === "movie" ? () => getMovie(category) : () => getTv(category)
+    type === "movie"
+      ? () => getMovie(category)
+      : type === "tv"
+      ? () => getTv(category)
+      : () => getSearchMovie(keyword)
   );
+
   const [index, setIndex] = useState(0);
 
   // 인덱스 증가 여부
@@ -211,7 +217,11 @@ export function Slider({ category, type }: ISlider) {
             .slice(offset * index, offset * index + offset)
             .map((item) => (
               <Item
-                onClick={() => boxClick(item.id, category)}
+                onClick={
+                  type !== "search"
+                    ? () => boxClick(item.id, category)
+                    : () => undefined
+                }
                 variants={boxVariant}
                 initial="start"
                 whileHover="hover"
@@ -221,7 +231,9 @@ export function Slider({ category, type }: ISlider) {
               >
                 <img src={makePath(item.poster_path, "w300")}></img>
                 <Info variants={infoVariant}>
-                  {type === "movie" ? item.title : item.name}
+                  {type === "movie" || type === "search"
+                    ? item.title
+                    : item.name}
                 </Info>
               </Item>
             ))}

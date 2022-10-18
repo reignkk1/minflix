@@ -141,7 +141,7 @@ export function Overlay({ category, type }: IOverlay) {
               <MovieGenres>
                 장르 :{" "}
                 {detail?.genres.map((gen) => (
-                  <span>{gen.name + " "}</span>
+                  <span key={gen.name}>{gen.name + " "}</span>
                 ))}
               </MovieGenres>
               <MovieDate>

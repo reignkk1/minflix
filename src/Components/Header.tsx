@@ -116,11 +116,11 @@ function Header() {
     scrollY.onChange(() => {
       if (scrollY.get() > 80) {
         navAnimation.start({
-          backgroundColor: "rgba(0,0,0,0)",
+          backgroundColor: "rgba(0,0,0,0.8)",
         });
       } else {
         navAnimation.start({
-          backgroundColor: "rgba(0,0,0,0.5)",
+          backgroundColor: "rgba(0,0,0,0.2)",
         });
       }
     });
