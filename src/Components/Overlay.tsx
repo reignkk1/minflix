@@ -8,6 +8,7 @@ import {
   getMovie,
   getMovieDetail,
   getMovieVideo,
+  getSearchMovie,
   getTv,
   getTvDetail,
   getTvVideo,
@@ -74,43 +75,60 @@ const MovieTagLine = styled.div`
 interface IOverlay {
   category: string;
   type: string;
+  keyword?: string | null;
 }
 // ======================================================================================================
 
-export function Overlay({ category, type }: IOverlay) {
+export function Overlay({ category, type, keyword }: IOverlay) {
   const bigMovieInfo = useMatch(`/${type}/${category}/:id`);
+  const searchMovieInfo = useMatch(`/${type}/:id`);
 
   const { data } = useQuery<IGetMovies>(
-    [type, category],
-    type === "movie" ? () => getMovie(category) : () => getTv(category)
+    [type, category + keyword],
+    type === "movie"
+      ? () => getMovie(category)
+      : type === "tv"
+      ? () => getTv(category)
+      : () => getSearchMovie(keyword!)
   );
 
   const { data: detail } = useQuery<IGetDetail>(
-    [`${type}Detail`, bigMovieInfo?.params.id],
+    [`${type}Detail`, bigMovieInfo?.params.id || searchMovieInfo?.params.id],
     type === "movie"
       ? () => getMovieDetail(bigMovieInfo?.params.id)
-      : () => getTvDetail(bigMovieInfo?.params.id)
+      : type === "tv"
+      ? () => getTvDetail(bigMovieInfo?.params.id)
+      : () => getMovieDetail(searchMovieInfo?.params.id)
   );
 
   const { data: video } = useQuery<IGetVideo>(
-    [`${type}Video`, bigMovieInfo?.params.id],
+    [`${type}Video`, bigMovieInfo?.params.id || searchMovieInfo?.params.id],
     type === "movie"
       ? () => getMovieVideo(bigMovieInfo?.params.id)
-      : () => getTvVideo(bigMovieInfo?.params.id)
+      : type === "tv"
+      ? () => getTvVideo(bigMovieInfo?.params.id)
+      : () => getMovieVideo(searchMovieInfo?.params.id)
   );
 
   const navigate = useNavigate();
-
   const overlayClick = () => {
-    type === "movie" ? navigate("/") : navigate("/tv");
+    type === "movie"
+      ? navigate("/")
+      : type === "tv"
+      ? navigate("/tv")
+      : navigate(`/search?keyword=${keyword}`);
   };
   const movieClick =
-    bigMovieInfo?.params.id &&
-    data?.results.find((movie) => movie.id + "" === bigMovieInfo.params.id);
+    (bigMovieInfo?.params.id || searchMovieInfo?.params.id) &&
+    data?.results.find(
+      (movie) =>
+        movie.id + "" ===
+        (bigMovieInfo?.params.id || searchMovieInfo?.params.id)
+    );
 
   const { scrollY } = useScroll();
 
-  return bigMovieInfo ? (
+  return bigMovieInfo || searchMovieInfo ? (
     <AnimatePresence>
       <OverlayContainer
         onClick={overlayClick}
@@ -118,8 +136,17 @@ export function Overlay({ category, type }: IOverlay) {
         exit={{ opacity: 0 }}
       />
       <MovieBox
+        key={
+          type === "search"
+            ? searchMovieInfo?.params.id + category
+            : bigMovieInfo?.params.id + category
+        }
         scrollY={scrollY.get()}
-        layoutId={bigMovieInfo?.params.id + category}
+        layoutId={
+          type === "search"
+            ? searchMovieInfo?.params.id + category
+            : bigMovieInfo?.params.id + category
+        }
       >
         {movieClick && (
           <>
@@ -131,12 +158,21 @@ export function Overlay({ category, type }: IOverlay) {
                 title="YouTube video player"
               ></iframe>
             ) : (
-              <MovieImg movieImg={makePath(movieClick.backdrop_path, "w500")} />
+              <MovieImg
+                movieImg={makePath(
+                  movieClick.backdrop_path || movieClick.poster_path,
+                  "w500"
+                )}
+              />
             )}
 
             <MovieInfo>
               <MovieTitle>
-                {type === "movie" ? movieClick.title : movieClick.name}
+                {type === "movie"
+                  ? movieClick.title
+                  : type === "tv"
+                  ? movieClick.name
+                  : movieClick.title}
               </MovieTitle>
               <MovieGenres>
                 장르 :{" "}
@@ -148,7 +184,9 @@ export function Overlay({ category, type }: IOverlay) {
                 개봉일 :{" "}
                 {type === "movie"
                   ? movieClick.release_date
-                  : movieClick.first_air_date}
+                  : type === "tv"
+                  ? movieClick.first_air_date
+                  : movieClick.release_date}
               </MovieDate>
               <MovieTimeLine>
                 {type === "movie" ? `${detail?.runtime} 분` : null}

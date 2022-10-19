@@ -133,7 +133,6 @@ function Header() {
   const navigate = useNavigate();
 
   const onSubmit = (data: IForm) => {
-    console.log(data);
     navigate(`/search?keyword=${data.keyword}`);
   };
 

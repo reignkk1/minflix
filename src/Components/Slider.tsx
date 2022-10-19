@@ -99,7 +99,7 @@ interface ISlider {
 
 export function Slider({ category, type, keyword }: ISlider) {
   const { isLoading, data } = useQuery<IGetMovies>(
-    ["movies", category],
+    ["movies", category + keyword],
     type === "movie"
       ? () => getMovie(category)
       : type === "tv"
@@ -154,6 +154,10 @@ export function Slider({ category, type, keyword }: ISlider) {
 
   const boxClick = (moveiId: number, category: string) => {
     navigate(`/${type}/${category}/${moveiId}`);
+  };
+
+  const searchBoxClick = (moveiId: number) => {
+    navigate(`/${type}/${moveiId}?keyword=${keyword}`);
   };
 
   // 애니메이션 Variants
@@ -218,9 +222,9 @@ export function Slider({ category, type, keyword }: ISlider) {
             .map((item) => (
               <Item
                 onClick={
-                  type !== "search"
-                    ? () => boxClick(item.id, category)
-                    : () => undefined
+                  type === "search"
+                    ? () => searchBoxClick(item.id)
+                    : () => boxClick(item.id, category)
                 }
                 variants={boxVariant}
                 initial="start"
@@ -229,7 +233,10 @@ export function Slider({ category, type, keyword }: ISlider) {
                 key={item.id + category}
                 layoutId={item.id + category}
               >
-                <img src={makePath(item.poster_path, "w300")}></img>
+                <img
+                  alt="포스터"
+                  src={makePath(item.poster_path, "w300")}
+                ></img>
                 <Info variants={infoVariant}>
                   {type === "movie" || type === "search"
                     ? item.title

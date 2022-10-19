@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { category } from "../category";
 import { Slider } from "../Components/Slider";
 
+import { Overlay } from "../Components/Overlay";
+
 const SliderBox = styled.div`
   margin-top: 150px;
 `;
@@ -22,14 +24,21 @@ function Search() {
   const keyword = new URLSearchParams(location.search).get("keyword");
 
   return (
-    <SliderBox>
-      <Keyword>검색어 : {keyword}</Keyword>
-      <Slider
+    <>
+      <SliderBox>
+        <Keyword>검색어 : {keyword}</Keyword>
+        <Slider
+          category={category.searchMovie}
+          type={type.search}
+          keyword={keyword}
+        ></Slider>
+      </SliderBox>
+      <Overlay
         category={category.searchMovie}
         type={type.search}
         keyword={keyword}
       />
-    </SliderBox>
+    </>
   );
 }
 
