@@ -1,11 +1,13 @@
-import { type } from "../category";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
+// File
+import { type } from "../category";
 import { category } from "../category";
 import { Slider } from "../Components/Slider";
-
 import { Overlay } from "../Components/Overlay";
+
+// ======================================================================================================
 
 const SliderBox = styled.div`
   margin-top: 150px;
@@ -17,6 +19,8 @@ const Keyword = styled.div`
   margin-bottom: 34px;
   padding-left: 55px;
 `;
+
+// ======================================================================================================
 
 function Search() {
   const location = useLocation();

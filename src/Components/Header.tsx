@@ -25,7 +25,7 @@ const Container = styled.div`
   height: 100%;
 `;
 const Logo = styled(motion.svg)`
-  margin-right: 50px;
+  margin-right: 100px;
   width: 150px;
   height: 100%;
   fill: ${(props) => props.theme.red};
@@ -41,7 +41,7 @@ const Menu = styled.ul`
 const Item = styled.li`
   position: relative;
   text-align: center;
-  margin-right: 20px;
+  margin-right: 50px;
   color: ${(props) => props.theme.white.darker};
   transition: color 0.2s ease-in-out;
   &:hover {
@@ -137,7 +137,10 @@ function Header() {
   };
 
   return (
-    <Nav animate={navAnimation} initial={{ backgroundColor: "rgba(0,0,0,1)" }}>
+    <Nav
+      animate={navAnimation}
+      initial={{ backgroundColor: "rgba(0,0,0,0.2)" }}
+    >
       <Container>
         <Logo
           whileHover="hover"
@@ -151,13 +154,13 @@ function Header() {
         <Menu>
           <Link to="/">
             <Item>
-              Home
+              무비차트
               {homeMatch ? <Circle layoutId="circle" /> : null}
             </Item>
           </Link>
           <Link to="/tv">
             <Item>
-              Tv Show
+              Tv 드라마
               {tvMatch ? <Circle layoutId="circle" /> : null}
             </Item>
           </Link>

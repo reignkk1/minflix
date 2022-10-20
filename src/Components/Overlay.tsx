@@ -12,11 +12,10 @@ import {
   getTv,
   getTvDetail,
   getTvVideo,
-  IGetDetail,
-  IGetMovies,
-  IGetVideo,
 } from "../api";
+
 import { makePath } from "../imgePath";
+import { IGetDetail, IGetMovies, IGetVideo } from "../type";
 
 // ======================================================================================================
 
@@ -34,7 +33,7 @@ const OverlayContainer = styled(motion.div)`
 const MovieBox = styled(motion.div)<{ scrollY: number }>`
   position: absolute;
   width: 40vw;
-  height: 80vh;
+  height: 85vh;
   background-color: rgba(0, 0, 0, 0.7);
   border-radius: 25px;
   overflow: hidden;
@@ -46,7 +45,7 @@ const MovieBox = styled(motion.div)<{ scrollY: number }>`
 `;
 const MovieImg = styled.div<{ movieImg: string }>`
   width: 100%;
-  height: 50%;
+  height: 40%;
   background-image: url(${(props) => props.movieImg});
   background-position: center center;
   background-size: cover;
@@ -70,6 +69,9 @@ const MovieTimeLine = styled.div`
 `;
 const MovieTagLine = styled.div`
   margin-bottom: 5px;
+  font-weight: 600;
+  margin-top: 24px;
+  line-height: 1.2;
 `;
 
 interface IOverlay {
@@ -189,11 +191,11 @@ export function Overlay({ category, type, keyword }: IOverlay) {
                   : movieClick.release_date}
               </MovieDate>
               <MovieTimeLine>
-                {type === "movie" ? `${detail?.runtime} 분` : null}
+                {type === "movie" || type === "search"
+                  ? `${detail?.runtime} 분`
+                  : null}
               </MovieTimeLine>
-              <MovieTagLine>
-                {type === "movie" ? detail?.tagline : detail?.overview}
-              </MovieTagLine>
+              <MovieTagLine>{detail?.overview}</MovieTagLine>
             </MovieInfo>
           </>
         )}

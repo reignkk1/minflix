@@ -5,8 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 // File
-import { getMovie, getSearchMovie, getTv, IGetMovies } from "../api";
+import { getMovie, getSearchMovie, getTv } from "../api";
 import { makePath } from "../imgePath";
+import { IGetMovies } from "../type";
 
 // ======================================================================================================
 
