@@ -1,14 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 
 // File
-import { getTv } from "../api";
 import { category } from "../category";
 import { Banner } from "../Components/Banner";
 import { Overlay } from "../Components/Overlay";
 import { Slider } from "../Components/Slider";
-import { makePath } from "../imgePath";
-import { IGetTv } from "../type";
 
 // ======================================================================================================
 
@@ -21,10 +17,6 @@ const SlideContainer = styled.div`
 `;
 
 function Tv() {
-  const { isLoading, data } = useQuery<IGetTv>(["tv", "banner"], () =>
-    getTv("popular")
-  );
-
   return (
     <Main>
       <Banner
