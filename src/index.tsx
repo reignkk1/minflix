@@ -47,6 +47,14 @@ body {
 	background-color:${(props) => props.theme.black.darker};
 	color:${(props) => props.theme.white.darker};
 	overflow-x:hidden;
+	&::-webkit-scrollbar{
+		width:8px;
+	}
+	&::-webkit-scrollbar-thumb{
+		background-color:#e9e8e873;
+		border-radius:15px;
+		
+	}
 }
 ol, ul{
 	list-style: none;

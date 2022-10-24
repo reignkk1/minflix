@@ -103,7 +103,7 @@ export function Overlay({ category, type, keyword }: IOverlay) {
       : () => getMovieDetail(searchMovieInfo?.params.id)
   );
 
-  const { data: video } = useQuery<IGetVideo>(
+  const { isLoading: videoLoading, data: video } = useQuery<IGetVideo>(
     [`${type}Video`, bigMovieInfo?.params.id || searchMovieInfo?.params.id],
     type === "movie"
       ? () => getMovieVideo(bigMovieInfo?.params.id)
@@ -155,7 +155,7 @@ export function Overlay({ category, type, keyword }: IOverlay) {
             {video?.results[0] ? (
               <iframe
                 width="100%"
-                height="400px"
+                height="45%"
                 src={`https://www.youtube-nocookie.com/embed/${video?.results[0].key}?controls=1`}
                 title="YouTube video player"
               ></iframe>
